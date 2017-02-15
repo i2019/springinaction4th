@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:aop="http://www.springframework.org/schema/aop"
+  xsi:schemaLocation="http://www.springframework.org/schema/aop 
+      http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="beanLife" class="ty.tech.study.sia4.chapter1.knights.BeanLife">
+  	  <constructor-arg value="life-xml" />
+  </bean>
+  
+  <bean id="knight" class="ty.tech.study.sia4.chapter1.knights.BraveKnight">
+    <constructor-arg ref="quest" />
+  </bean>
+
+  <bean id="quest" class="ty.tech.study.sia4.chapter1.knights.SlayDragonQuest">
+    <constructor-arg value="#{T(System).out}" />
+  </bean>
+
+  <bean id="minstrel" class="ty.tech.study.sia4.chapter1.knights.Minstrel">
+    <constructor-arg value="#{T(System).out}" />
+  </bean>
+
+  <!-- 将Minstrel抽象为一个切面 -->
+  <aop:config>
+    <aop:aspect ref="minstrel">
+      <!-- 表达式的语法采用的是 AspectJ的切点表达式语言。  -->
+      <aop:pointcut id="embark" expression="execution(* *.embarkOnQuest(..))"/>   
+      <aop:before pointcut-ref="embark" method="singBeforeQuest"/>
+      <aop:after pointcut-ref="embark" method="singAfterQuest"/>
+    </aop:aspect>
+  </aop:config>
+  
+</beans>
